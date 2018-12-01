@@ -29,7 +29,8 @@ export const authUser = (req, res) => {
 
                     return res.sjson({
                         status: 200,
-                        token: JWTToken
+                        token: JWTToken,
+                        username: user.username,
                     })
             }
             return res.sjson({
@@ -53,7 +54,7 @@ export const registerUser = (req, res) => {
     req.checkBody('password', 'Password is required').notEmpty()
     req.checkBody('passwordConfirm', 'Passwords do not match').equals(password)
 
-    req.asyncValidationErrors()
+    return req.asyncValidationErrors()
     .then(() => {
         User.findOne({username}, (err, user) => {
             if(err) throw err

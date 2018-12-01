@@ -3,6 +3,18 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+
+const render = (App) => {
+    return ReactDOM.render(<App />, document.getElementById('root'))
+}
+
+render(App)
+
+if (module.hot) {
+    module.hot.accept('./App', () => {
+        const NextApp = require('./App').default;
+        render(NextApp);
+    })
+}
 
 serviceWorker.unregister()

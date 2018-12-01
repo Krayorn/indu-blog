@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
 import expressValidator from 'express-validator'
+import cors from 'cors'
 
 import authRouter from './routes/auth'
 
@@ -19,6 +20,8 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use(bodyParser.json())
+
+app.use(cors())
 
 app.use(expressValidator({
     errorFormatter: (param, msg, value) => {

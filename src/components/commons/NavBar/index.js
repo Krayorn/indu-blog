@@ -30,6 +30,7 @@ class NavBar extends Component {
                         user
                         ? <Fragment>
                             <Item to={'/profile'}>{user.username}</Item>
+                            <Item to={'/create'}>New article</Item>
                             <FakeItem onClick={this.logout} >Logout</FakeItem>
                         </Fragment>
                         : <Fragment>
@@ -44,6 +45,7 @@ class NavBar extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user
 })
 
 const mapDispatchToProps = (dispatch) => ({

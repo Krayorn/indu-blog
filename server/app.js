@@ -8,6 +8,7 @@ import expressValidator from 'express-validator'
 import cors from 'cors'
 
 import authRouter from './routes/auth'
+import articleRouter from './routes/articles'
 
 dotenv.config()
 
@@ -53,6 +54,8 @@ function authChecker(req, res, next) {
             req.decoded = decoded
             next()
         })
+    } else if (req.url.startsWith('/article') && req.method === 'GET') {
+        return next()
     } else {
         res.redirect('/auth')
     }
@@ -69,5 +72,6 @@ app.use((req, res, next) => {
 })
 
 app.use('', authRouter)
+app.use('', articleRouter)
 
 export default app

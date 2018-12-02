@@ -21,6 +21,7 @@ const ArticleSchema = new mongoose.Schema(
 )
 
 ArticleSchema.methods.comment = function(c) {
+    console.log('IM HERE')
     this.comments.push(c)
     return this.save()
 }

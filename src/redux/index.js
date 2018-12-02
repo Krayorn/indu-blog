@@ -2,16 +2,24 @@ import { combineReducers, applyMiddleware } from 'redux'
 
 //middlewares
 import authMiddleware from './middlewares/auth'
+import articleMiddleware from './middlewares/article'
+import commentMiddleware from './middlewares/comment'
 
 //reducers
 import authReducer from './reducers/auth'
+import articleReducer from './reducers/article'
+import commentReducer from './reducers/comment'
 
 const customMiddlewares = {
-    ...authMiddleware
+    ...authMiddleware,
+    ...articleMiddleware,
+    ...commentMiddleware,
 }
 
 export const reducers = combineReducers({
-    auth: authReducer
+    auth: authReducer,
+    article: articleReducer,
+    comment: commentReducer,
 })
 
 const customMiddleWare = store => next => action => {

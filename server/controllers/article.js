@@ -52,12 +52,45 @@ export const writeComment = (req, res, next) => {
             text: req.body.comment,
             author: req.decoded._id,
         })
-        .then((comment) => {
-            res.sjson({
-                status: 200,
-                data: comment,
+        .then((article) => {
+            article.populate('comments.author', (err) => {
+                res.sjson({
+                    status: 200,
+                    data: article,
+                })
             })
         })
+    })
+}
+
+export const deleteArticle = (req, res, next) => {
+    Article.deleteOne({_id: req.params.id}, (err) => {
+        return res.sjson({
+            status: 200,
+            data: {msg: 'Article Delete'},
+        })
+    })
+}
+
+export const editArticle = (req, res, next) => {
+    Article.findOne({_id: req.params.id})
+    .then(article => {
+        if (!article)
+        return res.send(404)
+
+        if(req.decoded._id === article.author.toString()) {
+
+            article.title = req.body.title
+            article.content = req.body.content
+
+            article.save((err, updatedArticle) => {
+                res.sjson({
+                    status: 200,
+                    data: updatedArticle
+                })
+            })
+        }
+
     })
 }
 
@@ -66,4 +99,6 @@ export default {
     getAllArticles,
     getOneArticle,
     writeComment,
+    deleteArticle,
+    editArticle,
 }

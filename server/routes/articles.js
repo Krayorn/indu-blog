@@ -12,4 +12,8 @@ router.get('/article/:id', article.getOneArticle)
 
 router.post('/article/:id', article.writeComment)
 
+router.delete('/article/:id', article.deleteArticle)
+
+router.put('/article/:id', article.editArticle)
+
 export default router

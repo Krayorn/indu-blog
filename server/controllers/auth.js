@@ -31,6 +31,7 @@ export const authUser = (req, res) => {
                         status: 200,
                         token: JWTToken,
                         username: user.username,
+                        _id: user._id,
                     })
             }
             return res.sjson({

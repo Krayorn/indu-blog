@@ -21,15 +21,23 @@ const ArticleSchema = new mongoose.Schema(
 )
 
 ArticleSchema.methods.comment = function(c) {
-    console.log('IM HERE')
     this.comments.push(c)
     return this.save()
 }
 
-ArticleSchema.methods.getUserArticle = function (_id) {
-    ArticleSchema.find({'author': _id}).then((article) => {
-        return article
+ArticleSchema.methods.uncomment = function(id, userId) {
+
+    const index = this.comments.findIndex(comment => {
+        if (comment._id.toString() === id) {
+            return this.author._id.toString() === userId || comment.author._id.toString() === userId
+        }
+        return false
     })
+
+    if (index !== -1) {
+        this.comments.splice(index, 1)
+        return this.save()
+    }
 }
 
 export default mongoose.model('Article', ArticleSchema)

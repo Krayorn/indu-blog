@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { withRouter, Link } from 'react-router-dom'
 
 // Redux
 import { connect } from 'react-redux'
-import { getOneArticle } from '../../../redux/actions/article'
-import { writeComment } from '../../../redux/actions/comment'
+import { getOneArticle, deleteArticle } from '../../../redux/actions/article'
+import { writeComment, deleteComment } from '../../../redux/actions/comment'
 
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
@@ -30,11 +31,37 @@ class Article extends Component {
         })
     }
 
+    deleteComment = (e, id) => {
+        e.preventDefault()
+        this.props.deleteComment({
+            id,
+            token: this.props.user.token
+        })
+    }
+
+    deleteArticle = (e) => {
+        e.preventDefault()
+        this.props.deleteArticle({
+            id: this.props.article._id,
+            token: this.props.user.token
+        })
+        this.props.history.push('/')
+    }
+
     render() {
         const { article, user } = this.props
-        console.log('test', user)
         return (
             <RegularLayout>
+                {
+                    (user && article.author && user._id === article.author._id) &&
+                    <Fragment>
+                        <form>
+                            <button onClick={this.deleteArticle} >Supprimer l'article !</button>
+                        </form>
+                        <Link to={`/edit/${article._id}`}>Editer l'article</Link>
+                    </Fragment>
+                }
+
                 <h2>{article.title}</h2>
 
                 <p>
@@ -46,6 +73,12 @@ class Article extends Component {
                         return (<div key={comment._id}>
                             <p>{comment.text}</p>
                             <span>by {comment.author.username}</span>
+                            {
+                                (user && (user._id === comment.author._id || user._id === article.author._id)) &&
+                                <form>
+                                    <button onClick={(e) => this.deleteComment(e, comment._id)} >Supprimer mon commentaire !</button>
+                                </form>
+                            }
                         </div>)
                     })
                 }
@@ -69,12 +102,14 @@ class Article extends Component {
 
 const mapStateToProps = (state) => ({
     article: state.article.detail || {},
-    user: state.auth.user,
+    user: state.auth.user || {},
 })
 
 const mapDispatchToProps = (dispatch) => ({
     getOneArticle: (payload) => dispatch(getOneArticle(payload)),
-    writeComment: (payload) => dispatch(writeComment(payload))
+    deleteArticle: (payload) => dispatch(deleteArticle(payload)),
+    writeComment: (payload) => dispatch(writeComment(payload)),
+    deleteComment: (payload) => dispatch(deleteComment(payload)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Article)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Article))

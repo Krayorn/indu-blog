@@ -49,7 +49,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    logoutUser: (payload) => dispatch(logoutUser(payload)),
+    logoutUser: () => dispatch(logoutUser()),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar))

@@ -9,6 +9,7 @@ import cors from 'cors'
 
 import authRouter from './routes/auth'
 import articleRouter from './routes/articles'
+import commentRouter from './routes/comments'
 
 dotenv.config()
 
@@ -73,5 +74,6 @@ app.use((req, res, next) => {
 
 app.use('', authRouter)
 app.use('', articleRouter)
+app.use('', commentRouter)
 
 export default app

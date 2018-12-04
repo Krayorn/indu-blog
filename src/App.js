@@ -10,6 +10,7 @@ import Register from './components/auth/Register'
 
 import Home from './components/blog/Home'
 import Create from './components/blog/Create'
+import Edit from './components/blog/Edit'
 import Article from './components/blog/Article'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -27,7 +28,8 @@ class App extends Component {
             <Route path={'/register'} component={Register} />
 
             <Route path={'/create'} component={Create} />
-            <Route path={'/:id'} component={Article} />
+            <Route path={'/edit/:id'} component={Edit} />
+            <Route path={'/article/:id'} component={Article} />
 
             <Route paht={'/'} component={Home} />
           </Switch>

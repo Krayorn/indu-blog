@@ -8,7 +8,6 @@ import commentMiddleware from './middlewares/comment'
 //reducers
 import authReducer from './reducers/auth'
 import articleReducer from './reducers/article'
-import commentReducer from './reducers/comment'
 
 const customMiddlewares = {
     ...authMiddleware,
@@ -19,7 +18,6 @@ const customMiddlewares = {
 export const reducers = combineReducers({
     auth: authReducer,
     article: articleReducer,
-    comment: commentReducer,
 })
 
 const customMiddleWare = store => next => action => {

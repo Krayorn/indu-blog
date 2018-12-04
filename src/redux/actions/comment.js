@@ -4,3 +4,10 @@ export function writeComment(payload) {
         payload,
     }
 }
+
+export function deleteComment(payload) {
+    return {
+        type: 'MDW_DELETE_COMMENT',
+        payload,
+    }
+}

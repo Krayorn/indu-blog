@@ -13,7 +13,6 @@ class Create extends Component {
 
     writeArticle = (e) => {
         e.preventDefault()
-        console.log({...this.state, token: this.props.token})
         this.props.writeArticle({...this.state, token: this.props.token})
     }
 

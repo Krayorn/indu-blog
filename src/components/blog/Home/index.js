@@ -27,7 +27,7 @@ class Home extends Component {
                         return (
                             <div key={article._id} >
                                 <h3>{article.title}</h3>
-                                <Link to={`/${article._id}`} >Lire l'article !</Link>
+                                <Link to={`/article/${article._id}`} >Lire l'article !</Link>
                                 <span>written by {article.author.username}</span>
                             </div>
                         )
@@ -44,7 +44,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    getAllArticles: (payload) => dispatch(getAllArticles(payload)),
+    getAllArticles: () => dispatch(getAllArticles()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

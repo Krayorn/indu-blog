@@ -1,4 +1,4 @@
-const baseURL = process.env.NODE_ENV === 'production' ? process.env.baseURL : 'http://localhost:' + (process.env.PORT || 3001)
+const baseURL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:' + (process.env.PORT || 3001)
 
 export async function getJsonResponse (response) {
     const json = await response.json()

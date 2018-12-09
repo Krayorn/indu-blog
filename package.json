@@ -32,5 +32,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "set NODE_ENV=production&& nodemon server/index.js --exec babel-node --presets es2015,stage-2"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

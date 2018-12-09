@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:' + 3001
+const baseURL = process.env.NODE_ENV === 'production' ? process.env.baseURL : 'http://localhost:' + (process.env.PORT || 3001)
 
 export async function getJsonResponse (response) {
     const json = await response.json()
@@ -12,7 +12,7 @@ export async function getJsonResponse (response) {
 export async function restGet (uri, headers = {}) {
   const authorizationHeaders = {}
 
-  return fetch(`${baseURL}${uri}`, {
+  return fetch(`${baseURL}/api${uri}`, {
     mode: 'cors',
     headers: {
       ...headers,
@@ -26,7 +26,7 @@ export async function restGet (uri, headers = {}) {
 export async function restPost (uri, body, headers = {}) {
   const authorizationHeaders = {}
 
-  return fetch(`${baseURL}${uri}`, {
+  return fetch(`${baseURL}/api${uri}`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -42,7 +42,7 @@ export async function restPost (uri, body, headers = {}) {
 export async function restDelete (uri, headers = {}) {
   const authorizationHeaders = {}
 
-  return fetch(`${baseURL}${uri}`, {
+  return fetch(`${baseURL}/api${uri}`, {
     method: 'DELETE',
     mode: 'cors',
     headers: {
@@ -57,7 +57,7 @@ export async function restDelete (uri, headers = {}) {
 export async function restPut (uri, body, headers = {}) {
   const authorizationHeaders = {}
 
-  return fetch(`${baseURL}${uri}`, {
+  return fetch(`${baseURL}/api${uri}`, {
     method: 'PUT',
     mode: 'cors',
     headers: {
@@ -73,7 +73,7 @@ export async function restPut (uri, body, headers = {}) {
 export async function restPatch (uri, body, headers = {}) {
   const authorizationHeaders = {}
 
-  return fetch(`${baseURL}${uri}`, {
+  return fetch(`${baseURL}/api${uri}`, {
     method: 'PATCH',
     mode: 'cors',
     headers: {

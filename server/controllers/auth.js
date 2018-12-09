@@ -22,7 +22,7 @@ export const authUser = (req, res) => {
                         username: user.username,
                         _id: user._id
                     },
-                    'secret',
+                    process.env.SECRET,
                     {
                         expiresIn: '24h'
                     })

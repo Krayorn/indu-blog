@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
 import expressValidator from 'express-validator'
 import cors from 'cors'
+import path from 'path'
 
 import authRouter from './routes/auth'
 import articleRouter from './routes/articles'
@@ -43,22 +44,22 @@ app.use(expressValidator({
 
 function authChecker(req, res, next) {
     const token = req.body.token || req.headers['x-access-token']
-    if (req.url === '/auth' || req.url === '/user') {
+    if (req.url === '/api/auth' || req.url === '/api/user') {
         return next()
     }
 
     if (token) {
-        jwt.verify(token, 'secret', (err, decoded) => {
+        jwt.verify(token, process.env.SECRET, (err, decoded) => {
             if (err) {
                 return res.status(301).json({ success: false, message: 'Failed to authenticate token.' })
             }
             req.decoded = decoded
             next()
         })
-    } else if (req.url.startsWith('/article') && req.method === 'GET') {
+    } else if (req.url.startsWith('/api/article') && req.method === 'GET') {
         return next()
     } else {
-        res.redirect('/auth')
+        res.redirect('/api/auth')
     }
 }
 
@@ -73,8 +74,16 @@ app.use((req, res, next) => {
     return next()
 })
 
-app.use('', authRouter)
-app.use('', articleRouter)
-app.use('', commentRouter)
+app.use('/api', authRouter)
+app.use('/api', articleRouter)
+app.use('/api', commentRouter)
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../build')))
+
+    app.get('/', function (req, res, next) {
+        res.sendFile(path.resolve(__dirname, '../build/index.html'))
+    })
+}
 
 export default app

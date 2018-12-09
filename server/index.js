@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import app from './app'
 
 const port = process.env.PORT
-const host = process.env.HOST
+const host = process.env.baseURL
 
 app.set('ip', host)
 app.set('port', port)

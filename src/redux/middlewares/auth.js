@@ -5,14 +5,14 @@ const authMiddleware = {
         restPost('/user', payload)
         .then(
             data => dispatch({type: 'REGISTER_OK', payload: {response: data}}),
-            err => dispatch({ type: 'REGISTER_ERROR', payload: {err} })
+            err => dispatch({ type: 'REGISTER_ERROR', payload: {...err} })
         )
     },
     MDW_LOGIN: (payload, dispatch) => {
         restPost('/auth', payload)
         .then(
             data => dispatch({type: 'LOGIN_OK', payload: {response: data}}),
-            err => dispatch({ type: 'LOGIN_ERROR', payload: {err} })
+            err => dispatch({ type: 'LOGIN_ERROR', payload: {response: err} })
         )
     },
     MDW_GET_ALL_USERS: (payload, dispatch) => {

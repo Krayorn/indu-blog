@@ -9,12 +9,21 @@ import { connect } from 'react-redux'
 import RegularLayout from '../../../layouts/RegularLayout'
 
 class Register extends Component {
-    state = {}
+    state = {success: false}
+
+    static getDerivedStateFromProps(props, state) {
+        if (props.user.username == state.username && props.user.token) {
+            return {
+                success: true,
+            }
+        }
+
+        return null
+    }
 
     registerUser = (e) => {
         e.preventDefault()
         this.props.registerUser(this.state)
-        this.props.history.push('/login')
     }
 
     handleChange = (name, value) => {
@@ -24,8 +33,22 @@ class Register extends Component {
     }
 
     render() {
+
+        if (this.state.success) {
+            this.props.history.push('/login')
+        }
+
         return (
             <RegularLayout>
+                {
+                    this.props.errors.length > 0 &&
+                    this.props.errors.map(err => (
+                        <div key={err.id} >
+                            {err.msg}
+                        </div>
+                    ))
+                }
+
                 <form>
                     <input onChange={(e) => this.handleChange('username', e.target.value)} type='text' placeholder='username' name='username'></input>
                     <input onChange={(e) => this.handleChange('password', e.target.value)} type='password' placeholder='password' name='password' />
@@ -39,6 +62,8 @@ class Register extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user || {},
+    errors: state.auth.errors || [],
 })
 
 const mapDispatchToProps = (dispatch) => ({

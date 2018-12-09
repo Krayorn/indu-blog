@@ -14,7 +14,6 @@ class Login extends Component {
     loginUser = (e) => {
         e.preventDefault()
         this.props.loginUser(this.state)
-        this.props.history.push('/')
     }
 
     handleChange = (name, value) => {
@@ -24,8 +23,21 @@ class Login extends Component {
     }
 
     render() {
+
+        if (this.props.user.token) {
+            this.props.history.push('/')
+        }
+
         return (
             <RegularLayout>
+                {
+                    this.props.errors.length > 0 &&
+                    this.props.errors.map(err => (
+                        <div key={err.id} >
+                            {err.msg}
+                        </div>
+                    ))
+                }
                 <form>
                     <input onChange={(e) => this.handleChange('username', e.target.value)} type='text' placeholder='username' name='username'></input>
                     <input onChange={(e) => this.handleChange('password', e.target.value)} type='password' placeholder='password' name='password' />
@@ -38,6 +50,8 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user || {},
+    errors: state.auth.errors || []
 })
 
 const mapDispatchToProps = (dispatch) => ({

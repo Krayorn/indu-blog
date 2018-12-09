@@ -1,14 +1,25 @@
-const auth = (state = { user: false, list: [] }, action) => {
+const auth = (state = { user: false, list: [], errors: [] }, action) => {
 
     switch (action.type) {
         case 'REGISTER_OK':
             return Object.assign({}, state, {
-                data: action.payload.response
+                user: action.payload.response.data,
+                errors: []
+            })
+
+        case 'REGISTER_ERROR':
+            return Object.assign({}, state, {
+                errors: (action.payload.response || action.payload.errors ).map(err => err.param ? err.msg : err)
             })
 
         case 'LOGIN_OK':
             return Object.assign({}, state, {
                 user: action.payload.response
+            })
+
+        case 'LOGIN_ERROR':
+            return Object.assign({}, state, {
+                errors: action.payload.response.errors
             })
 
         case 'LOGOUT':

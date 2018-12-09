@@ -24,7 +24,7 @@ class Create extends Component {
 
     render() {
 
-        if (this.props.detail && this.props.detail.title === this.state.title) {
+        if (this.props.detail && this.props.detail.title === this.state.title && this.props.detail.content === this.state.content) {
             this.props.history.push(`/article/${this.props.detail._id}`)
         }
 

@@ -7,7 +7,7 @@ export const authUser = (req, res) => {
         if (!user) {
             return res.sjson({
                 status: 401,
-                failed: 'Unrecognised Username'
+                errors: [{id: 'api.auth.login.username.unrecognised', msg: 'Unrecognised Username'}]
             })
         }
         bcrypt.compare(req.body.password, user.password, (err, result) => {
@@ -52,9 +52,9 @@ export const authUser = (req, res) => {
 export const registerUser = (req, res) => {
     const { username, password } = req.body
 
-    req.checkBody('username', 'Username is required').notEmpty()
-    req.checkBody('password', 'Password is required').notEmpty()
-    req.checkBody('passwordConfirm', 'Passwords do not match').equals(password)
+    req.checkBody('username', {id: 'api.auth.register.username.required', msg:'Username is required'}).notEmpty()
+    req.checkBody('password', {id: 'api.auth.register.password.required', msg:'Password is required'}).notEmpty()
+    req.checkBody('passwordConfirm', {id: 'api.auth.register.password.required', msg:'Passwords do not match'}).equals(password)
 
     return req.asyncValidationErrors()
     .then(() => {
@@ -62,9 +62,14 @@ export const registerUser = (req, res) => {
             if(err) throw err
             if (user) {
                 if (username === user.username) {
-                    return res.sjson({status: 400, error: 'Username already in use'})
+                    return res.sjson({
+                        status: 400,
+                        errors: [{
+                            id: 'api.auth.register.username.existing',
+                            msg: 'Username already in use'
+                        }]
+                    })
                 }
-                return res.sjson({status: 400, error: 'Email already in use'})
             } else {
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if(err) {
@@ -79,9 +84,23 @@ export const registerUser = (req, res) => {
                             password: hash,
                             role: 'DEFAULT',
                         }).save().then((result) => {
+
+                            const JWTToken = jwt.sign({
+                                username: result.username,
+                                _id: result._id
+                            },
+                            process.env.SECRET,
+                            {
+                                expiresIn: '24h'
+                            })
+
                             res.sjson({
                                 status: 200,
-                                data: result
+                                data: {
+                                    username: result.username,
+                                    role: result.role,
+                                    token: JWTToken
+                                },
                             })
                         }).catch(err => {
                             res.sjson({ status: 500, err })

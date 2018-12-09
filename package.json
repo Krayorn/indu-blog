@@ -31,7 +31,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "react-scripts build && set NODE_ENV=production && nodemon server/index.js --exec babel-node --presets es2015,stage-2",
+    "start": "set NODE_ENV=production && nodemon server/index.js --exec babel-node --presets es2015,stage-2",
     "build-server": "babel server --out-dir dist"
   },
   "eslintConfig": {

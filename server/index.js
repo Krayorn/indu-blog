@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise
 
 const startApp = app => {
     return new Promise((resolve, reject) => {
-        const server = app.listen(app.get('port'), app.get('ip'), () => {
+        const server = app.listen(app.get('port'), () => {
             console.log(`Api: ready`.blue)
             return resolve()
         })

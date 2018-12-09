@@ -43,6 +43,11 @@ app.use(expressValidator({
 }))
 
 function authChecker(req, res, next) {
+
+    if(!req.url.startsWith('/api')) {
+        return next()
+    }
+
     const token = req.body.token || req.headers['x-access-token']
     if (req.url === '/api/auth' || req.url === '/api/user') {
         return next()

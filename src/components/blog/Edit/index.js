@@ -18,7 +18,7 @@ class Edit extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (state.title === '' || state.content === '') {
+        if ((state.title === '' || state.content === '') && props.match.params.id === props.article._id) {
             return {
                 title: props.article.title,
                 content: props.article.content,

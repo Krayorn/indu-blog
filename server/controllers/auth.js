@@ -31,6 +31,7 @@ export const authUser = (req, res) => {
                         status: 200,
                         token: JWTToken,
                         username: user.username,
+                        role: user.role,
                         _id: user._id,
                     })
             }
@@ -75,7 +76,8 @@ export const registerUser = (req, res) => {
                     else {
                         new User({
                             username: req.body.username,
-                            password: hash
+                            password: hash,
+                            role: 'DEFAULT',
                         }).save().then((result) => {
                             res.sjson({
                                 status: 200,
@@ -96,7 +98,58 @@ export const registerUser = (req, res) => {
     })
 }
 
+export const getAllUsers = (req, res) => {
+    User.find({})
+    .then((users) => {
+        if (!users)
+            res.send(404)
+        else
+        res.sjson({
+            status: 200,
+            data: users
+        })
+    })
+    .catch((err) => {
+        return res.sjson({
+            status: 400,
+            errors: [err]
+        })
+    })
+}
+
+export const deleteUser = (req, res) => {
+    User.deleteOne({_id: req.params.id}, (err, deleted) => {
+        return res.sjson({
+            status: 200,
+            data: {
+                id: req.params.id,
+                deleted
+            },
+        })
+    })
+}
+
+export const updateRole = (req, res) => {
+    User.findOne({_id: req.params.id})
+    .then(user => {
+        if (!user)
+            return res.send(404)
+
+        user.role = req.body.role
+
+        user.save((err, updatedUser) => {
+            res.sjson({
+                status: 200,
+                data: updatedUser
+            })
+        })
+    })
+}
+
 export default {
     authUser,
     registerUser,
+    getAllUsers,
+    deleteUser,
+    updateRole,
 }

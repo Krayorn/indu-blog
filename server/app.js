@@ -50,7 +50,7 @@ function authChecker(req, res, next) {
     if (token) {
         jwt.verify(token, 'secret', (err, decoded) => {
             if (err) {
-                return res.json({ success: false, message: 'Failed to authenticate token.' })
+                return res.status(301).json({ success: false, message: 'Failed to authenticate token.' })
             }
             req.decoded = decoded
             next()
@@ -66,7 +66,8 @@ app.use(authChecker)
 
 app.use((req, res, next) => {
     res.sjson = (data) => {
-        res.status(data.status).json(data)
+        res.status(data.status)
+        res.json(data)
     }
 
     return next()

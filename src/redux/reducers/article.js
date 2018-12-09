@@ -1,9 +1,15 @@
-const article = (state = { list: [] }, action) => {
+const article = (state = { list: [], errors: [] }, action) => {
 
     switch (action.type) {
         case 'WRITE_ARTICLE_OK':
             return Object.assign({}, state, {
-                data: action.payload.response
+                detail: action.payload.response.data,
+                errors: []
+            })
+
+        case 'WRITE_ARTICLE_ERROR':
+            return Object.assign({}, state, {
+                errors: action.payload.response.errors
             })
 
         case 'GET_ALL_ARTICLES_OK':
@@ -17,7 +23,6 @@ const article = (state = { list: [] }, action) => {
             })
 
         case 'WRITE_COMMENT_OK':
-
             return Object.assign({}, state, {
                 sucess: action.payload.response,
                 detail: action.payload.response.data
@@ -31,7 +36,7 @@ const article = (state = { list: [] }, action) => {
 
         case 'DELETE_ARTICLE_OK':
             return Object.assign({}, state, {
-                sucess: action.payload.response,
+                list: state.list.filter(article => article._id !== action.payload.response.data.id),
             })
 
         default:

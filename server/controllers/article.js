@@ -3,13 +3,25 @@ import Article from '../models/Article'
 export const createArticle = (req, res, next) => {
     const { title, content } = req.body
 
-    new Article({ title, content, author: req.decoded._id, comments: [] })
-    .save((err, article) => {
-        if (err) res.send(err)
-        res.sjson({
-            status: 200,
-            data: article
-        })
+    Article.findOne({ title }).then((article) => {
+        if (article) {
+            return res.sjson({
+                status: 400,
+                errors: [{
+                    id: 'api.article.create.title.existing',
+                    msg: 'Il y a déjà un Article portant le même titre !'
+                }]
+            })
+        } else {
+            new Article({ title, content, author: req.decoded._id, comments: [] })
+            .save((err, article) => {
+                if (err) res.send(err)
+                return res.sjson({
+                    status: 200,
+                    data: article
+                })
+            })
+        }
     })
 }
 
@@ -64,10 +76,13 @@ export const writeComment = (req, res, next) => {
 }
 
 export const deleteArticle = (req, res, next) => {
-    Article.deleteOne({_id: req.params.id}, (err) => {
+    Article.deleteOne({_id: req.params.id}, (err, deleted) => {
         return res.sjson({
             status: 200,
-            data: {msg: 'Article Delete'},
+            data: {
+                id: req.params.id,
+                deleted,
+            },
         })
     })
 }

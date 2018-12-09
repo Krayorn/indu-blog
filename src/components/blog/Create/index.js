@@ -23,8 +23,21 @@ class Create extends Component {
     }
 
     render() {
+
+        if (this.props.detail && this.props.detail.title === this.state.title) {
+            this.props.history.push(`/article/${this.props.detail._id}`)
+        }
+
         return (
             <RegularLayout>
+                {
+                    this.props.errors.length > 0 &&
+                    this.props.errors.map(err => (
+                        <div key={err.id} >
+                            {err.msg}
+                        </div>
+                    ))
+                }
                 <form>
                     <input onChange={(e) => this.handleChange('title', e.target.value)} type='text' placeholder='title' name='title' />
                     <textarea onChange={(e) => this.handleChange('content', e.target.value)} type='text' placeholder='content' name='content' />
@@ -38,6 +51,8 @@ class Create extends Component {
 
 const mapStateToProps = (state) => ({
     token: state.auth.user.token,
+    detail: state.article.detail || false,
+    errors: (state.article.errors || []).filter(err => err.id.startsWith('api.article.create')),
 })
 
 const mapDispatchToProps = (dispatch) => ({

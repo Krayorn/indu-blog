@@ -29,8 +29,18 @@ class NavBar extends Component {
                     {
                         user
                         ? <Fragment>
+                            {
+                                user.role === 'ADMIN' &&
+                                <Fragment>
+                                    <Item to={'/admin/articles'}>Admin Articles</Item>
+                                    <Item to={'/admin/users'}>Admin Users</Item>
+                                </Fragment>
+                            }
                             <Item to={'/profile'}>{user.username}</Item>
-                            <Item to={'/create'}>New article</Item>
+                            {
+                                user.role !== 'DEFAULT' &&
+                                <Item to={'/create'}>New article</Item>
+                            }
                             <FakeItem onClick={this.logout} >Logout</FakeItem>
                         </Fragment>
                         : <Fragment>

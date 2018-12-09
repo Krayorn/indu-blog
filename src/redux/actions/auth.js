@@ -17,3 +17,24 @@ export function logoutUser() {
         type: 'LOGOUT',
     }
 }
+
+export function getAllUsers(payload) {
+    return {
+        type: 'MDW_GET_ALL_USERS',
+        payload,
+    }
+}
+
+export function deleteUser(payload) {
+    return {
+        type: 'MDW_DELETE_USER',
+        payload,
+    }
+}
+
+export function updateRole(payload) {
+    return {
+        type: 'MDW_UPDATE_ROLE',
+        payload,
+    }
+}

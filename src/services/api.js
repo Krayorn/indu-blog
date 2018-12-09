@@ -1,13 +1,11 @@
 const baseURL = 'http://localhost:' + 3001
 
 export async function getJsonResponse (response) {
-    let json
-    try {
-    json = await response.json()
-    if (response.ok) return json
-    } catch (error) {
-        console.error('Failed to fetch', json) // eslint-disable-line no-console
-        return false
+    const json = await response.json()
+    if (response.ok){
+      return json
+    } else {
+      throw json
     }
 }
 
@@ -61,6 +59,22 @@ export async function restPut (uri, body, headers = {}) {
 
   return fetch(`${baseURL}${uri}`, {
     method: 'PUT',
+    mode: 'cors',
+    headers: {
+      ...headers,
+      ...authorizationHeaders,
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then(getJsonResponse)
+}
+
+export async function restPatch (uri, body, headers = {}) {
+  const authorizationHeaders = {}
+
+  return fetch(`${baseURL}${uri}`, {
+    method: 'PATCH',
     mode: 'cors',
     headers: {
       ...headers,

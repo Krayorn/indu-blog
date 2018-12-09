@@ -5,7 +5,7 @@ const articleMiddleware = {
         restPost('/article', payload, { "x-access-token": payload.token })
         .then(
             data => dispatch({type: 'WRITE_ARTICLE_OK', payload: {response: data}}),
-            err => dispatch({ type: 'WRITE_ARTICLE_ERROR', payload: {err} })
+            err => dispatch({ type: 'WRITE_ARTICLE_ERROR', payload: {response: err} })
         )
     },
     MDW_GET_ALL_ARTICLES: (payload, dispatch) => {

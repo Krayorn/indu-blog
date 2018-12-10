@@ -89,15 +89,15 @@ class Article extends Component {
                 {
                     article.comments && article.comments.map((comment) => {
                         return (<div key={comment._id}>
+                            <hr />
                             <p>{comment.text}</p>
                             <span>by {comment.author.username}</span>
                             {
-                                (user && (user._id === comment.author._id || user._id === article.author._id)) &&
+                            (user && (user._id === comment.author._id || user._id === article.author._id)) &&
                                 <Form>
                                     <Button onClick={(e) => this.deleteComment(e, comment._id)} text='Delete my comment !' />
                                 </Form>
                             }
-                            <hr />
                         </div>)
                     })
                 }
@@ -105,6 +105,7 @@ class Article extends Component {
                 {
                     user && user.token &&
                     <div>
+                        <hr />
                         Publish one comment !
 
                         <Form>

@@ -12,6 +12,11 @@ export const createArticle = (req, res, next) => {
                     msg: 'Il y a déjà un Article portant le même titre !'
                 }]
             })
+        } else if(req.decoded.role === 'DEFAULT') {
+            return res.sjson({
+                status: 301,
+                errors: ['bad']
+            })
         } else {
             new Article({ title, content, author: req.decoded._id, comments: [] })
             .save((err, article) => {
@@ -76,15 +81,20 @@ export const writeComment = (req, res, next) => {
 }
 
 export const deleteArticle = (req, res, next) => {
-    Article.deleteOne({_id: req.params.id}, (err, deleted) => {
-        return res.sjson({
-            status: 200,
-            data: {
-                id: req.params.id,
-                deleted,
-            },
-        })
+    Article.findOne({_id: req.params.id}, (err, article) => {
+        if (req.decoded._id === article.author._id || req.decoded.role === 'ADMIN') {
+            Article.deleteOne({_id: req.params.id}, (err, deleted) => {
+                return res.sjson({
+                    status: 200,
+                    data: {
+                        id: req.params.id,
+                        deleted,
+                    },
+                })
+            })
+        }
     })
+
 }
 
 export const editArticle = (req, res, next) => {
@@ -93,7 +103,7 @@ export const editArticle = (req, res, next) => {
         if (!article)
         return res.send(404)
 
-        if(req.decoded._id === article.author.toString()) {
+        if(req.decoded._id === article.author.toString() || req.decoded.role === 'ADMIN') {
 
             article.title = req.body.title
             article.content = req.body.content

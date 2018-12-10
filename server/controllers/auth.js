@@ -20,7 +20,8 @@ export const authUser = (req, res) => {
             if(result) {
                 const JWTToken = jwt.sign({
                         username: user.username,
-                        _id: user._id
+                        _id: user._id,
+                        role: user.role,
                     },
                     process.env.SECRET,
                     {
@@ -87,7 +88,8 @@ export const registerUser = (req, res) => {
 
                             const JWTToken = jwt.sign({
                                 username: result.username,
-                                _id: result._id
+                                _id: result._id,
+                                role: result.role,
                             },
                             process.env.SECRET,
                             {
@@ -118,37 +120,54 @@ export const registerUser = (req, res) => {
 }
 
 export const getAllUsers = (req, res) => {
-    User.find({})
-    .then((users) => {
-        if (!users)
-            res.send(404)
-        else
-        res.sjson({
-            status: 200,
-            data: users
-        })
-    })
-    .catch((err) => {
+    if (req.decoded.role !== 'ADMIN') {
         return res.sjson({
-            status: 400,
-            errors: [err]
+            status: 301,
+            err: ['not auth']
         })
-    })
+    } else {
+        User.find({})
+        .then((users) => {
+            if (!users)
+            res.send(404)
+            else
+            res.sjson({
+                status: 200,
+                data: users
+            })
+        })
+        .catch((err) => {
+            return res.sjson({
+                status: 400,
+                errors: [err]
+            })
+        })
+    }
 }
 
 export const deleteUser = (req, res) => {
-    User.deleteOne({_id: req.params.id}, (err, deleted) => {
-        return res.sjson({
-            status: 200,
-            data: {
-                id: req.params.id,
-                deleted
-            },
+    if (req.decoded.role === 'ADMIN' || req.params.id.toString() == req.decoded._id.toString()) {
+        User.deleteOne({_id: req.params.id}, (err, deleted) => {
+            return res.sjson({
+                status: 200,
+                data: {
+                    id: req.params.id,
+                    deleted
+                },
+            })
         })
-    })
+    }
 }
 
 export const updateRole = (req, res) => {
+
+    if(req.decoded.role !== 'ADMIN') {
+        return res.sjson({
+            status: 400,
+            err: ['not auth']
+        })
+    }
+
     User.findOne({_id: req.params.id})
     .then(user => {
         if (!user)

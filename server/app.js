@@ -85,8 +85,7 @@ app.use('/api', commentRouter)
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../build')))
-
-    app.get('/', function (req, res, next) {
+    app.use(function (req, res, next) {
         res.sendFile(path.resolve(__dirname, '../build/index.html'))
     })
 }

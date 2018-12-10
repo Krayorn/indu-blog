@@ -8,6 +8,10 @@ import { connect } from 'react-redux'
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
 
+// Components
+import Button from '../../commons/Button'
+import Form from '../../commons/Form'
+
 class Login extends Component {
     state = {}
 
@@ -38,12 +42,12 @@ class Login extends Component {
                         </div>
                     ))
                 }
-                <form>
+                <Form>
                     <input onChange={(e) => this.handleChange('username', e.target.value)} type='text' placeholder='username' name='username'></input>
                     <input onChange={(e) => this.handleChange('password', e.target.value)} type='password' placeholder='password' name='password' />
 
-                    <button onClick={this.loginUser} >Me connecter !</button>
-                </form>
+                    <Button onClick={this.loginUser} text='Login !' />
+                </Form>
             </RegularLayout>
         )
     }

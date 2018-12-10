@@ -36,8 +36,6 @@ class AdminUsers extends Component {
 
         return (
             <RegularLayout>
-                <h2>Welcome on this Blog !</h2>
-
                 {
                     users.map((user) => {
                         return (

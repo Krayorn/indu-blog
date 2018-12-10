@@ -8,6 +8,13 @@ import { getAllArticles } from '../../../redux/actions/article'
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
 
+// Style
+import {
+    Title,
+    ArticleContainer,
+    EndContainer,
+} from './style'
+
 class Home extends Component {
     constructor(props) {
         super(props)
@@ -20,16 +27,20 @@ class Home extends Component {
 
         return (
             <RegularLayout>
-                <h2>Welcome on this Blog !</h2>
+                <Title>All Articles !</Title>
 
                 {
                     articles.map((article) => {
                         return (
-                            <div key={article._id} >
-                                <h3>{article.title}</h3>
-                                <Link to={`/article/${article._id}`} >Lire l'article !</Link>
-                                <span>written by {article.author.username}</span>
-                            </div>
+                            <ArticleContainer key={article._id} >
+                                <Title>{article.title}</Title>
+                                <p>{article.content.substring(0,1000)}...</p>
+                                <Link to={`/article/${article._id}`} >Read more</Link>
+                                <EndContainer>
+                                    <span>written by {article.author.username}</span><br />
+                                    <span>{article.comments.length} comments</span>
+                                </EndContainer>
+                            </ArticleContainer>
                         )
                     })
                 }

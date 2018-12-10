@@ -8,6 +8,11 @@ import { connect } from 'react-redux'
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
 
+// Components
+import Button from '../../commons/Button'
+import Form from '../../commons/Form'
+import TextArea from '../../commons/TextArea'
+
 class Create extends Component {
     state = {}
 
@@ -38,12 +43,12 @@ class Create extends Component {
                         </div>
                     ))
                 }
-                <form>
+                <Form>
                     <input onChange={(e) => this.handleChange('title', e.target.value)} type='text' placeholder='title' name='title' />
-                    <textarea onChange={(e) => this.handleChange('content', e.target.value)} type='text' placeholder='content' name='content' />
+                    <TextArea onChange={(e) => this.handleChange('content', e.target.value)} type='text' placeholder='content' name='content' />
 
-                    <button onClick={this.writeArticle} >Publier !</button>
-                </form>
+                    <Button onClick={this.writeArticle} text='Publish !' />
+                </Form>
             </RegularLayout>
         )
     }

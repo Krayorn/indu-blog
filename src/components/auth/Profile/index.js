@@ -7,6 +7,9 @@ import { deleteUser } from '../../../redux/actions/auth'
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
 
+// Components
+import Button from '../../commons/Button'
+
 class Profile extends Component {
     deleteUser = (e, id) => {
         e.preventDefault()
@@ -24,7 +27,7 @@ class Profile extends Component {
                 <p>{user.username}</p>
                 <p>{user.role}</p>
                 <form>
-                    <button onClick={(e) => this.deleteUser(e, user._id)} >Delete my account !</button>
+                    <Button onClick={(e) => this.deleteUser(e, user._id)} text='Delete my account !' />
                 </form>
             </RegularLayout>
         )

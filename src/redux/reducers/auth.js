@@ -14,7 +14,8 @@ const auth = (state = { user: false, list: [], errors: [] }, action) => {
 
         case 'LOGIN_OK':
             return Object.assign({}, state, {
-                user: action.payload.response
+                user: action.payload.response,
+                erorrs: [],
             })
 
         case 'LOGIN_ERROR':

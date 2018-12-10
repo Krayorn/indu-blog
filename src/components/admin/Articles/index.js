@@ -28,8 +28,6 @@ class AdminArticles extends Component {
 
         return (
             <RegularLayout>
-                <h2>Welcome on this Blog !</h2>
-
                 {
                     articles.map((article) => {
                         return (

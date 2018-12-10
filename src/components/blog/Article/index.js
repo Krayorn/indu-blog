@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 
 // Redux
 import { connect } from 'react-redux'
@@ -8,6 +8,17 @@ import { writeComment, deleteComment } from '../../../redux/actions/comment'
 
 // Layout
 import RegularLayout from '../../../layouts/RegularLayout'
+
+// Components
+import Button from '../../commons/Button'
+import Form from '../../commons/Form'
+import TextArea from '../../commons/TextArea'
+
+import {
+    HeaderContainer,
+    StyledLink,
+    Title,
+} from './style'
 
 class Article extends Component {
     constructor(props) {
@@ -54,12 +65,12 @@ class Article extends Component {
             <RegularLayout>
                 {
                     (user && article.author && user._id === article.author._id) &&
-                    <Fragment>
-                        <form>
-                            <button onClick={this.deleteArticle} >Supprimer l'article !</button>
-                        </form>
-                        <Link to={`/edit/${article._id}`}>Editer l'article</Link>
-                    </Fragment>
+                    <HeaderContainer>
+                        <Form>
+                            <Button onClick={this.deleteArticle} text='Delete !' />
+                        </Form>
+                        <StyledLink to={`/edit/${article._id}`}>Editer l'article</StyledLink>
+                    </HeaderContainer>
                 }
 
                 <h2>{article.title}</h2>
@@ -69,29 +80,37 @@ class Article extends Component {
                 </p>
 
                 {
+                    article.comments && article.comments.length > 0 &&
+                    <Title>
+                        Comments Section !
+                    </Title>
+                }
+
+                {
                     article.comments && article.comments.map((comment) => {
                         return (<div key={comment._id}>
                             <p>{comment.text}</p>
                             <span>by {comment.author.username}</span>
                             {
                                 (user && (user._id === comment.author._id || user._id === article.author._id)) &&
-                                <form>
-                                    <button onClick={(e) => this.deleteComment(e, comment._id)} >Supprimer mon commentaire !</button>
-                                </form>
+                                <Form>
+                                    <Button onClick={(e) => this.deleteComment(e, comment._id)} text='Delete my comment !' />
+                                </Form>
                             }
+                            <hr />
                         </div>)
                     })
                 }
 
                 {
-                    user &&
+                    user && user.token &&
                     <div>
-                        Publier Un commentaire !
+                        Publish one comment !
 
-                        <form>
-                            <textarea onChange={(e) => this.handleChange('comment', e.target.value)} type='text' placeholder='comment' name='comment' />
-                            <button onClick={this.writeComment} >Envoyer mon commentaire !</button>
-                        </form>
+                        <Form>
+                            <TextArea onChange={(e) => this.handleChange('comment', e.target.value)} type='text' placeholder='comment' name='comment' />
+                            <Button onClick={this.writeComment} text='Send !' />
+                        </Form>
                     </div>
                 }
 

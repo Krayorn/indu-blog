@@ -49,7 +49,7 @@ function authChecker(req, res, next) {
     }
 
     const token = req.body.token || req.headers['x-access-token']
-    if (req.url === '/api/auth' || req.url === '/api/user') {
+    if (req.url === '/api/auth' || (req.url === '/api/user' && req.method === 'POST' )) {
         return next()
     }
 

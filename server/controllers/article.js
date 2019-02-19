@@ -70,7 +70,7 @@ export const writeComment = (req, res, next) => {
             author: req.decoded._id,
         })
         .then((article) => {
-            article.populate('comments.author', (err) => {
+            article.populate('author').populate('comments.author', (err) => {
                 res.sjson({
                     status: 200,
                     data: article,

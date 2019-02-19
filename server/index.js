@@ -5,7 +5,7 @@ const port = process.env.PORT
 const host = process.env.baseURL
 
 app.set('ip', host)
-app.set('port', port)
+app.set('port', 3001)
 
 mongoose.Promise = global.Promise
 

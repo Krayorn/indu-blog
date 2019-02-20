@@ -3,7 +3,7 @@ const article = (state = { list: [], errors: [] }, action) => {
     switch (action.type) {
         case 'WRITE_ARTICLE_OK':
             return Object.assign({}, state, {
-                detail: action.payload.response.data,
+                detail: action.payload.response.data.article,
                 errors: []
             })
 
@@ -25,7 +25,7 @@ const article = (state = { list: [], errors: [] }, action) => {
         case 'WRITE_COMMENT_OK':
             return Object.assign({}, state, {
                 sucess: action.payload.response,
-                detail: action.payload.response.data
+                detail: action.payload.response.data.article
             })
 
         case 'DELETE_COMMENT_OK':

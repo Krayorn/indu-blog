@@ -43,6 +43,16 @@ const auth = (state = { user: false, list: [], errors: [] }, action) => {
                 list: state.list.map(user => user._id !== action.payload.response.data._id ? user : {...user, role: action.payload.response.data.role })
             })
 
+        case 'WRITE_COMMENT_OK':
+        case 'WRITE_ARTICLE_OK':
+            return Object.assign({}, state, {
+                user: {
+                    ...state.user,
+                    gamer: action.payload.response.data.gamerInfo,
+                },
+                errors: []
+            })
+
         default:
             return state
     }

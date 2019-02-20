@@ -1,4 +1,14 @@
 import Article from '../models/Article'
+import fetch from 'node-fetch'
+
+async function getJsonResponse (response) {
+    const json = await response.json()
+    if (response.ok){
+      return json
+    } else {
+      throw json
+    }
+}
 
 export const createArticle = (req, res, next) => {
     const { title, content } = req.body
@@ -21,9 +31,26 @@ export const createArticle = (req, res, next) => {
             new Article({ title, content, author: req.decoded._id, comments: [] })
             .save((err, article) => {
                 if (err) res.send(err)
-                return res.sjson({
-                    status: 200,
-                    data: article
+
+                return fetch(`${process.env.GAME_API_BASE_URL}/gamer/${req.decoded._id}?api_key=${process.env.GAME_API_KEY}`, {
+                    mode: 'cors',
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        experience: 20,
+                    })
+                })
+                .then(getJsonResponse)
+                .then(gamerInfo => {
+                    return res.sjson({
+                        status: 200,
+                        data: {
+                            article,
+                            gamerInfo: gamerInfo.data,
+                        }
+                    })
                 })
             })
         }
@@ -71,10 +98,28 @@ export const writeComment = (req, res, next) => {
         })
         .then((article) => {
             article.populate('author').populate('comments.author', (err) => {
-                res.sjson({
-                    status: 200,
-                    data: article,
+
+                return fetch(`${process.env.GAME_API_BASE_URL}/gamer/${req.decoded._id}?api_key=${process.env.GAME_API_KEY}`, {
+                    mode: 'cors',
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        experience: 10,
+                    })
                 })
+                .then(getJsonResponse)
+                .then(gamerInfo => {
+                    res.sjson({
+                        status: 200,
+                        data: {
+                            article,
+                            gamerInfo: gamerInfo.data,
+                        },
+                    })
+                })
+
             })
         })
     })

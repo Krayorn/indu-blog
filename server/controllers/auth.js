@@ -1,6 +1,16 @@
 import User from '../models/User'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import fetch from 'node-fetch'
+
+async function getJsonResponse (response) {
+    const json = await response.json()
+    if (response.ok){
+      return json
+    } else {
+      throw json
+    }
+}
 
 export const authUser = (req, res) => {
     User.findOne({username: req.body.username}, (err, user) => {
@@ -28,13 +38,30 @@ export const authUser = (req, res) => {
                         expiresIn: '24h'
                     })
 
-                    return res.sjson({
-                        status: 200,
-                        token: JWTToken,
-                        username: user.username,
-                        role: user.role,
-                        _id: user._id,
+                    return fetch(`${process.env.GAME_API_BASE_URL}/gamer/${user._id}?api_key=${process.env.GAME_API_KEY}`, {
+                        mode: 'cors',
+                        headers: {
+                            'content-type': 'application/json'
+                        }
                     })
+                    .then(getJsonResponse)
+                    .then(gamerInfo => {
+                        return res.sjson({
+                            status: 200,
+                            token: JWTToken,
+                            username: user.username,
+                            role: user.role,
+                            gamer: gamerInfo.data,
+                            _id: user._id,
+                        })
+                    })
+                    .catch(err => {
+                        return res.sjson({
+                            status: 401,
+                            errors: [{id: 'api.game', msg: err.errors[0]}]
+                        })
+                    })
+
             }
             return res.sjson({
                 status: 401,
@@ -86,23 +113,43 @@ export const registerUser = (req, res) => {
                             role: 'DEFAULT',
                         }).save().then((result) => {
 
-                            const JWTToken = jwt.sign({
-                                username: result.username,
-                                _id: result._id,
-                                role: result.role,
-                            },
-                            process.env.SECRET,
-                            {
-                                expiresIn: '24h'
-                            })
-
-                            res.sjson({
-                                status: 200,
-                                data: {
-                                    username: result.username,
-                                    role: result.role,
-                                    token: JWTToken
+                            fetch(`${process.env.GAME_API_BASE_URL}/gamer?api_key=${process.env.GAME_API_KEY}`, {
+                                mode: 'cors',
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
                                 },
+                                body: JSON.stringify({
+                                    clientId: result._id
+                                })
+                            })
+                            .then(getJsonResponse)
+                            .then(gamerInfo => {
+                                const JWTToken = jwt.sign({
+                                    username: result.username,
+                                    _id: result._id,
+                                    role: result.role,
+                                },
+                                process.env.SECRET,
+                                {
+                                    expiresIn: '24h'
+                                })
+
+                                res.sjson({
+                                    status: 200,
+                                    data: {
+                                        username: result.username,
+                                        role: result.role,
+                                        gamer: gamerInfo.data,
+                                        token: JWTToken
+                                    },
+                                })
+                            })
+                            .catch(err => {
+                                return res.sjson({
+                                    status: 401,
+                                    errors: [{id: 'api.game', msg: err.errors[0]}]
+                                })
                             })
                         }).catch(err => {
                             res.sjson({ status: 500, err })

@@ -26,6 +26,9 @@ class Profile extends Component {
             <RegularLayout>
                 <p>{user.username}</p>
                 <p>{user.role}</p>
+                <h1>GAMER INFO</h1>
+                <p>LEVEL: {user.gamer.level}</p>
+                <p>XP: {user.gamer.experience}</p>
                 <form>
                     <Button onClick={(e) => this.deleteUser(e, user._id)} text='Delete my account !' />
                 </form>

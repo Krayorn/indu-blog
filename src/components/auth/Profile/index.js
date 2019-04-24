@@ -32,6 +32,21 @@ class Profile extends Component {
                 <form>
                     <Button onClick={(e) => this.deleteUser(e, user._id)} text='Delete my account !' />
                 </form>
+                {
+                    user.gamer.achievements &&
+                    <div>
+                        {user.gamer.achievements.map(ach => {
+                            return <div key={ach.detail._id} >
+                                    {ach.detail.title} - {ach.detail.condition}
+                                    {
+                                        ach.detail.goal &&
+                                        <div>{ach.progression}/{ach.detail.goal}</div>
+                                    }
+                                </div>
+                        })}
+                    </div>
+                }
+
             </RegularLayout>
         )
     }

@@ -120,7 +120,7 @@ export const registerUser = (req, res) => {
                                     'content-type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                    clientId: result._id
+                                    gamerId: result._id
                                 })
                             })
                             .then(getJsonResponse)
@@ -135,15 +135,32 @@ export const registerUser = (req, res) => {
                                     expiresIn: '24h'
                                 })
 
-                                res.sjson({
-                                    status: 200,
-                                    data: {
-                                        username: result.username,
-                                        role: result.role,
-                                        gamer: gamerInfo.data,
-                                        token: JWTToken
-                                    },
+                                fetch(`${process.env.GAME_API_BASE_URL}/gamer/${result._id}/achievements/REGISTER?api_key=${process.env.GAME_API_KEY}`, {
+                                    mode: 'cors',
+                                    method: 'PATCH',
+                                    headers: {
+                                        'content-type': 'application/json'
+                                    }
                                 })
+                                .then(getJsonResponse)
+                                .then(achievement => {
+                                    res.sjson({
+                                        status: 200,
+                                        data: {
+                                            username: result.username,
+                                            role: result.role,
+                                            gamer: achievement.errors ? gamerInfo.data : achievement.data,
+                                            token: JWTToken,
+                                        },
+                                    })
+                                })
+                                .catch(err => {
+                                    return res.sjson({
+                                        status: 401,
+                                        errors: [{id: 'api.game', msg: err.errors[0]}]
+                                    })
+                                })
+
                             })
                             .catch(err => {
                                 return res.sjson({

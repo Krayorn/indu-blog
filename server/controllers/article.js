@@ -44,13 +44,34 @@ export const createArticle = (req, res, next) => {
                 })
                 .then(getJsonResponse)
                 .then(gamerInfo => {
-                    return res.sjson({
-                        status: 200,
-                        data: {
-                            article,
-                            gamerInfo: gamerInfo.data,
+
+                    return fetch(`${process.env.GAME_API_BASE_URL}/gamer/${req.decoded._id}/achievements/POSTER?api_key=${process.env.GAME_API_KEY}`, {
+                        mode: 'cors',
+                        method: 'PATCH',
+                        headers: {
+                            'content-type': 'application/json'
                         }
                     })
+                    .then(getJsonResponse)
+                    .then(achievement => {
+                        if (achievement.errors) {
+                            return res.sjson({
+                                status: 200,
+                                data: {
+                                    article,
+                                    gamerInfo: gamerInfo.data,
+                                }
+                            })
+                        }
+                        return res.sjson({
+                            status: 200,
+                            data: {
+                                article,
+                                gamerInfo: achievement.data
+                            }
+                        })
+                    })
+
                 })
             })
         }
@@ -111,12 +132,35 @@ export const writeComment = (req, res, next) => {
                 })
                 .then(getJsonResponse)
                 .then(gamerInfo => {
-                    res.sjson({
-                        status: 200,
-                        data: {
-                            article,
-                            gamerInfo: gamerInfo.data,
+
+                    return fetch(`${process.env.GAME_API_BASE_URL}/gamer/${req.decoded._id}/achievements/COMMENTS?api_key=${process.env.GAME_API_KEY}`, {
+                        mode: 'cors',
+                        method: 'PATCH',
+                        headers: {
+                            'content-type': 'application/json'
                         },
+                        body: JSON.stringify({
+                            progression: 1,
+                        })
+                    })
+                    .then(getJsonResponse)
+                    .then(achievement => {
+                        if (achievement.errors) {
+                            res.sjson({
+                                status: 200,
+                                data: {
+                                    article,
+                                    gamerInfo: gamerInfo.data,
+                                },
+                            })
+                        }
+                        return res.sjson({
+                            status: 200,
+                            data: {
+                                article,
+                                gamerInfo: achievement.data
+                            }
+                        })
                     })
                 })
 
